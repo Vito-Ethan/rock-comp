@@ -8,61 +8,220 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as IndexRouteImport } from './routes/index';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as notFoundSplatRouteImport } from './routes/(notFound)/$'
+import { Route as GGymNameLayoutRouteImport } from './routes/g/$gymName/layout'
+import { Route as GGymNameIndexRouteImport } from './routes/g/$gymName/index'
+import { Route as GGymNameEventsIndexRouteImport } from './routes/g/$gymName/events/index'
+import { Route as GGymNameEventsEventIdRouteImport } from './routes/g/$gymName/events/$eventId'
 
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const notFoundSplatRoute = notFoundSplatRouteImport.update({
+  id: '/(notFound)/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GGymNameLayoutRoute = GGymNameLayoutRouteImport.update({
+  id: '/g/$gymName',
+  path: '/g/$gymName',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GGymNameIndexRoute = GGymNameIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GGymNameLayoutRoute,
+} as any)
+const GGymNameEventsIndexRoute = GGymNameEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => GGymNameLayoutRoute,
+} as any)
+const GGymNameEventsEventIdRoute = GGymNameEventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => GGymNameLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/events': typeof EventsRoute
+  '/g/$gymName': typeof GGymNameLayoutRouteWithChildren
+  '/$': typeof notFoundSplatRoute
+  '/g/$gymName/': typeof GGymNameIndexRoute
+  '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
+  '/g/$gymName/events': typeof GGymNameEventsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/events': typeof EventsRoute
+  '/$': typeof notFoundSplatRoute
+  '/g/$gymName': typeof GGymNameIndexRoute
+  '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
+  '/g/$gymName/events': typeof GGymNameEventsIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/events': typeof EventsRoute
+  '/g/$gymName': typeof GGymNameLayoutRouteWithChildren
+  '/(notFound)/$': typeof notFoundSplatRoute
+  '/g/$gymName/': typeof GGymNameIndexRoute
+  '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
+  '/g/$gymName/events/': typeof GGymNameEventsIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/';
-  id: '__root__' | '/';
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/events'
+    | '/g/$gymName'
+    | '/$'
+    | '/g/$gymName/'
+    | '/g/$gymName/events/$eventId'
+    | '/g/$gymName/events'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/about'
+    | '/events'
+    | '/$'
+    | '/g/$gymName'
+    | '/g/$gymName/events/$eventId'
+    | '/g/$gymName/events'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/events'
+    | '/g/$gymName'
+    | '/(notFound)/$'
+    | '/g/$gymName/'
+    | '/g/$gymName/events/$eventId'
+    | '/g/$gymName/events/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  EventsRoute: typeof EventsRoute
+  GGymNameLayoutRoute: typeof GGymNameLayoutRouteWithChildren
+  notFoundSplatRoute: typeof notFoundSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(notFound)/$': {
+      id: '/(notFound)/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof notFoundSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/g/$gymName': {
+      id: '/g/$gymName'
+      path: '/g/$gymName'
+      fullPath: '/g/$gymName'
+      preLoaderRoute: typeof GGymNameLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/g/$gymName/': {
+      id: '/g/$gymName/'
+      path: '/'
+      fullPath: '/g/$gymName/'
+      preLoaderRoute: typeof GGymNameIndexRouteImport
+      parentRoute: typeof GGymNameLayoutRoute
+    }
+    '/g/$gymName/events/': {
+      id: '/g/$gymName/events/'
+      path: '/events'
+      fullPath: '/g/$gymName/events'
+      preLoaderRoute: typeof GGymNameEventsIndexRouteImport
+      parentRoute: typeof GGymNameLayoutRoute
+    }
+    '/g/$gymName/events/$eventId': {
+      id: '/g/$gymName/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/g/$gymName/events/$eventId'
+      preLoaderRoute: typeof GGymNameEventsEventIdRouteImport
+      parentRoute: typeof GGymNameLayoutRoute
+    }
   }
 }
 
+interface GGymNameLayoutRouteChildren {
+  GGymNameIndexRoute: typeof GGymNameIndexRoute
+  GGymNameEventsEventIdRoute: typeof GGymNameEventsEventIdRoute
+  GGymNameEventsIndexRoute: typeof GGymNameEventsIndexRoute
+}
+
+const GGymNameLayoutRouteChildren: GGymNameLayoutRouteChildren = {
+  GGymNameIndexRoute: GGymNameIndexRoute,
+  GGymNameEventsEventIdRoute: GGymNameEventsEventIdRoute,
+  GGymNameEventsIndexRoute: GGymNameEventsIndexRoute,
+}
+
+const GGymNameLayoutRouteWithChildren = GGymNameLayoutRoute._addFileChildren(
+  GGymNameLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-};
+  AboutRoute: AboutRoute,
+  EventsRoute: EventsRoute,
+  GGymNameLayoutRoute: GGymNameLayoutRouteWithChildren,
+  notFoundSplatRoute: notFoundSplatRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx';
-import type { createStart } from '@tanstack/react-start';
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
