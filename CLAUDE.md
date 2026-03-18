@@ -24,6 +24,7 @@ npm run format     # Prettier format only
 **Routing:** File-based via TanStack React Router. Routes live in `src/routes/`. The file `src/routeTree.gen.ts` is auto-generated — never edit it manually.
 
 Route structure:
+
 - `/` — home
 - `/about`, `/events` — top-level pages
 - `/g/$gymName/` — gym pages (dynamic param)
@@ -34,8 +35,11 @@ Data fetching happens via route loaders (TanStack Router) using the Supabase cli
 
 **UI Components:** shadcn/ui components in `src/components/ui/`. New shadcn components should be added with the CLI using the config in `components.json` (style: Radix Maia, icons: Phosphor, base color: zinc). The `cn()` utility for class merging is at `src/lib/utils.ts`.
 
+When creating any UI components/elements, default to using shadcn as the UI library base for any custom components.
+
 **Path alias:** `@/*` maps to `src/*`.
 
 **Environment variables** (required in `.env`):
+
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`
