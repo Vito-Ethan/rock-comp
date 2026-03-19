@@ -1,22 +1,20 @@
+import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import * as React from 'react';
-import { EventCard } from '@/components/EventCard';
-import {
-  EventFilters,
-  type EventFiltersValue,
-} from '@/components/EventFilters';
-import { SortByDrawer } from '@/components/SortByDrawer';
-import { SortBySheet } from '@/components/SortBySheet';
-import { type SortValue } from '@/components/SortByDrawer';
+import type { EventFiltersValue } from '@/components/EventFilters/EventFilters';
+import type { SortValue } from '@/components/SortByDrawer/SortByDrawer';
+import EventCard from '@/components/EventCard/EventCard';
+import EventFilters from '@/components/EventFilters/EventFilters';
+import SortByDrawer from '@/components/SortByDrawer/SortByDrawer';
+import SortBySheet from '@/components/SortBySheet/SortBySheet';
 
 export const Route = createFileRoute('/dev/components')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [filters, setFilters] = React.useState<EventFiltersValue | undefined>();
-  const [sortDrawer, setSortDrawer] = React.useState<SortValue | undefined>();
-  const [sortSheet, setSortSheet] = React.useState<SortValue | undefined>();
+  const [filters, setFilters] = useState<EventFiltersValue | undefined>();
+  const [sortDrawer, setSortDrawer] = useState<SortValue | undefined>();
+  const [sortSheet, setSortSheet] = useState<SortValue | undefined>();
 
   return (
     <div className="space-y-12">

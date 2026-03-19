@@ -1,42 +1,24 @@
-import * as React from 'react';
-import {
-  ArrowsDownUp,
-  CalendarBlank,
-  Check,
-  MapPin,
-} from '@phosphor-icons/react';
+import { useState } from 'react';
+import { ArrowsDownUp, Check } from '@phosphor-icons/react';
+import type { SortValue } from '@/components/SortByDrawer/SortByDrawer';
 import { Button } from '@/components/ui/button';
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { SORT_OPTIONS } from '@/components/SortByDrawer/SortByDrawer';
 
-export type SortField = 'date' | 'distance';
-
-export interface SortValue {
-  field: SortField;
-}
-
-export const SORT_OPTIONS: {
-  value: SortValue;
-  label: string;
-  icon: React.ElementType;
-}[] = [
-  { value: { field: 'date' }, label: 'Soonest', icon: CalendarBlank },
-  { value: { field: 'distance' }, label: 'Nearest', icon: MapPin },
-];
-
-interface SortByDrawerProps {
+interface SortBySheetProps {
   value?: SortValue;
   onChange?: (value: SortValue) => void;
 }
 
-export function SortByDrawer({ value, onChange }: SortByDrawerProps) {
-  const [open, setOpen] = React.useState(false);
+export default function SortBySheet({ value, onChange }: SortBySheetProps) {
+  const [open, setOpen] = useState(false);
 
   function handleSelect(option: SortValue) {
     onChange?.(option);
@@ -48,23 +30,24 @@ export function SortByDrawer({ value, onChange }: SortByDrawerProps) {
     : null;
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} direction="bottom">
-      <DrawerTrigger asChild>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         <Button variant="outline" size="sm">
           <ArrowsDownUp weight="bold" data-icon="inline-start" />
           {activeOption ? activeOption.label : 'Sort'}
         </Button>
-      </DrawerTrigger>
+      </SheetTrigger>
 
-      <DrawerContent>
-        <DrawerHeader className="pb-2">
-          <DrawerTitle>Sort by</DrawerTitle>
-        </DrawerHeader>
+      <SheetContent side="right" showCloseButton={false} className="w-56 p-0">
+        <SheetHeader className="px-5 pt-6 pb-4">
+          <SheetTitle>Sort by</SheetTitle>
+        </SheetHeader>
 
-        <div className="px-4 pb-6 space-y-1">
+        <div className="px-3 space-y-0.5">
           {SORT_OPTIONS.map((opt) => {
             const selected = value?.field === opt.value.field;
             const Icon = opt.icon;
+
             return (
               <Button
                 key={opt.value.field}
@@ -86,7 +69,7 @@ export function SortByDrawer({ value, onChange }: SortByDrawerProps) {
             );
           })}
         </div>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 }

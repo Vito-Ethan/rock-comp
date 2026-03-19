@@ -35,7 +35,8 @@ Data fetching happens via route loaders (TanStack Router) using the Supabase cli
 
 **UI Components:** shadcn/ui components in `src/components/ui/`. New shadcn components should be added with the CLI using the config in `components.json` (style: Radix Maia, icons: Phosphor, base color: zinc). The `cn()` utility for class merging is at `src/lib/utils.ts`.
 
-When creating any UI components/elements, default to using shadcn as the UI library base for any custom components.
+- Files in `src/components/ui/` are managed by shadcn — **always ask before modifying them**.
+- Custom components build on top of shadcn primitives and live in `src/components/`. When asked to update a component, look there first.
 
 **Path alias:** `@/*` maps to `src/*`.
 
@@ -43,3 +44,26 @@ When creating any UI components/elements, default to using shadcn as the UI libr
 
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+## Code Style
+
+**Comments:** Follow the TSDoc specification. Keep comments concise. Always document type properties that are non-obvious or have default values.
+
+**Component structure:** Any new component under `src/components/` must live in its own folder: `src/components/<component-name>/`. Tests, hooks, types, and subcomponents should be colocated in that folder. Do not use barrel `index.ts` files — the component file should be named after the component it exports (e.g., `src/components/EventCard/EventCard.tsx`).
+
+**React imports:** Never use the `React.` prefix for hooks or utilities. Import them directly (e.g., `import { useState, useEffect } from 'react'`).
+
+**Exports:**
+
+- Named exports for hooks, utility helpers, and constants
+- Default exports for components
+
+**Declarations:** Prefer function declarations over arrow functions for components, hooks, and utility helpers.
+
+**Accessibility:** Always consider accessibility when creating components. This includes (but is not limited to): tying `<label>` to inputs via `htmlFor`/`id`, `aria-invalid` on invalid fields, `aria-describedby` to link inputs to error/helper text, `aria-label` on icon-only buttons, and appropriate ARIA roles where semantic HTML isn't sufficient.
+
+**Whitespace for readability:** Always put a newline above `return` statements. Put newlines above and below `if` blocks and other related logical blocks of code to visually separate them.
+
+**Before committing:** Always run `npm run format`, `npm run lint`, and `npm run test`.
+
+**Types:** Prefer `ComponentPropsWithRef` & `ComponentPropsWithoutRef` over `ComponentProps` to be explicit about whether a component handles or doesn't handle refs.

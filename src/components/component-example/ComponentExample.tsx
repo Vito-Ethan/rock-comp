@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import { useState } from 'react';
 import {
   BellIcon,
   BluetoothIcon,
@@ -30,7 +29,7 @@ import {
   TranslateIcon,
   UserIcon,
 } from '@phosphor-icons/react';
-import { Example, ExampleWrapper } from '@/components/example';
+import { Example, ExampleWrapper } from '@/components/example/Example';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,7 +90,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-export function ComponentExample() {
+export default function ComponentExample() {
   return (
     <ExampleWrapper>
       <CardExample />
@@ -162,12 +161,12 @@ const frameworks = [
 ] as const;
 
 function FormExample() {
-  const [notifications, setNotifications] = React.useState({
+  const [notifications, setNotifications] = useState({
     email: true,
     sms: false,
     push: true,
   });
-  const [theme, setTheme] = React.useState('light');
+  const [theme, setTheme] = useState('light');
 
   return (
     <Example title="Form">

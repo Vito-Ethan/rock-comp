@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { supabase } from '@/utils/supabase';
-import { ComponentExample } from '@/components/component-example';
+import ComponentExample from '@/components/component-example/ComponentExample';
 
 export const Route = createFileRoute('/')({
   component: App,

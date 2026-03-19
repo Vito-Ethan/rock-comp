@@ -1,6 +1,7 @@
+import type { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
 
-function ExampleWrapper({ className, ...props }: React.ComponentProps<'div'>) {
+function ExampleWrapper({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div className="bg-background w-full">
       <div
@@ -21,7 +22,7 @@ function Example({
   className,
   containerClassName,
   ...props
-}: React.ComponentProps<'div'> & {
+}: ComponentProps<'div'> & {
   title: string;
   containerClassName?: string;
 }) {

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { type DateRange } from 'react-day-picker';
+import { useEffect, useState } from 'react';
 import { CalendarBlank, Funnel, X } from '@phosphor-icons/react';
+import type { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -28,8 +28,9 @@ import { cn } from '@/lib/utils';
 const CLIMBING_STYLES = ['Boulder', 'Lead', 'Speed', 'Combined'] as const;
 
 export interface EventFiltersValue {
-  styles: string[];
+  styles: Array<string>;
   zipCode: string;
+  /** Miles radius from the zip code. @default 50 */
   radiusMiles: number;
   dateRange: DateRange | undefined;
 }
@@ -43,21 +44,28 @@ const DEFAULT_FILTERS: EventFiltersValue = {
 
 function formatDateRange(range: DateRange | undefined): string {
   if (!range?.from) return 'Select dates';
+
   const fmt = (d: Date) =>
     d.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
+
   if (!range.to) return fmt(range.from);
+
   return `${fmt(range.from)} – ${fmt(range.to)}`;
 }
 
 function countActiveFilters(filters: EventFiltersValue): number {
   let count = 0;
+
   if (filters.styles.length > 0) count++;
+
   if (filters.zipCode) count++;
+
   if (filters.dateRange?.from) count++;
+
   return count;
 }
 
@@ -66,13 +74,13 @@ interface EventFiltersProps {
   onChange?: (value: EventFiltersValue) => void;
 }
 
-export function EventFilters({ value, onChange }: EventFiltersProps) {
-  const [open, setOpen] = React.useState(false);
-  const [draft, setDraft] = React.useState<EventFiltersValue>(
+export default function EventFilters({ value, onChange }: EventFiltersProps) {
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<EventFiltersValue>(
     value ?? DEFAULT_FILTERS,
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) setDraft(value ?? DEFAULT_FILTERS);
   }, [open, value]);
 
@@ -92,7 +100,7 @@ export function EventFilters({ value, onChange }: EventFiltersProps) {
     setDraft(DEFAULT_FILTERS);
   }
 
-  const [calendarOpen, setCalendarOpen] = React.useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const activeCount = countActiveFilters(value ?? DEFAULT_FILTERS);
   const hasDateRange = !!draft.dateRange?.from;
@@ -115,7 +123,7 @@ export function EventFilters({ value, onChange }: EventFiltersProps) {
         <DrawerHeader className="flex-row items-center justify-between pb-0">
           <DrawerTitle>Filters</DrawerTitle>
           <DrawerClose asChild>
-            <Button variant="ghost" size="icon-sm">
+            <Button variant="ghost" size="icon-sm" aria-label="Close">
               <X weight="bold" />
             </Button>
           </DrawerClose>
@@ -151,8 +159,14 @@ export function EventFilters({ value, onChange }: EventFiltersProps) {
           <section className="space-y-4">
             <Label className="text-sm font-semibold">Location</Label>
             <div className="space-y-2">
-              <Label className="text-muted-foreground text-xs">Zip Code</Label>
+              <Label
+                htmlFor="filters-zip-code"
+                className="text-muted-foreground text-xs"
+              >
+                Zip Code
+              </Label>
               <Input
+                id="filters-zip-code"
                 placeholder="e.g. 10001"
                 maxLength={5}
                 value={draft.zipCode}
@@ -175,6 +189,7 @@ export function EventFilters({ value, onChange }: EventFiltersProps) {
                 step={5}
                 value={[draft.radiusMiles]}
                 onValueChange={([val]) => update('radiusMiles', val)}
+                aria-label="Radius in miles"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>5 mi</span>
@@ -211,7 +226,7 @@ export function EventFilters({ value, onChange }: EventFiltersProps) {
                   selected={draft.dateRange}
                   onSelect={(range) => {
                     update('dateRange', range);
-                    if (range?.from && range?.to) setCalendarOpen(false);
+                    if (range?.from && range.to) setCalendarOpen(false);
                   }}
                   numberOfMonths={1}
                   disabled={{ before: new Date() }}

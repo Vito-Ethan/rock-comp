@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 interface EventCardProps {
   imageUrl: string;
+  /** @default 'Event image' */
   imageAlt?: string;
   name: string;
   date: Date | string;
@@ -21,15 +22,17 @@ function formatDate(date: Date | string): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   const yyyy = d.getFullYear();
+
   return `${mm}/${dd}/${yyyy}`;
 }
 
 function formatFee(fee: number | string): string {
   if (typeof fee === 'string') return fee;
+
   return fee === 0 ? 'Free' : `$${fee}`;
 }
 
-export function EventCard({
+export default function EventCard({
   imageUrl,
   imageAlt = 'Event image',
   name,
