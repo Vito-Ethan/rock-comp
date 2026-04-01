@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as DevRouteImport } from './routes/dev'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevComponentsRouteImport } from './routes/dev/components'
 import { Route as notFoundSplatRouteImport } from './routes/(notFound)/$'
 import { Route as GGymNameLayoutRouteImport } from './routes/g/$gymName/layout'
 import { Route as GGymNameIndexRouteImport } from './routes/g/$gymName/index'
@@ -23,6 +25,11 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevRoute = DevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -32,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DevComponentsRoute = DevComponentsRouteImport.update({
+  id: '/components',
+  path: '/components',
+  getParentRoute: () => DevRoute,
 } as any)
 const notFoundSplatRoute = notFoundSplatRouteImport.update({
   id: '/(notFound)/$',
@@ -62,18 +74,22 @@ const GGymNameEventsEventIdRoute = GGymNameEventsEventIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dev': typeof DevRouteWithChildren
   '/events': typeof EventsRoute
   '/g/$gymName': typeof GGymNameLayoutRouteWithChildren
   '/$': typeof notFoundSplatRoute
+  '/dev/components': typeof DevComponentsRoute
   '/g/$gymName/': typeof GGymNameIndexRoute
   '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
-  '/g/$gymName/events': typeof GGymNameEventsIndexRoute
+  '/g/$gymName/events/': typeof GGymNameEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dev': typeof DevRouteWithChildren
   '/events': typeof EventsRoute
   '/$': typeof notFoundSplatRoute
+  '/dev/components': typeof DevComponentsRoute
   '/g/$gymName': typeof GGymNameIndexRoute
   '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
   '/g/$gymName/events': typeof GGymNameEventsIndexRoute
@@ -82,9 +98,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dev': typeof DevRouteWithChildren
   '/events': typeof EventsRoute
   '/g/$gymName': typeof GGymNameLayoutRouteWithChildren
   '/(notFound)/$': typeof notFoundSplatRoute
+  '/dev/components': typeof DevComponentsRoute
   '/g/$gymName/': typeof GGymNameIndexRoute
   '/g/$gymName/events/$eventId': typeof GGymNameEventsEventIdRoute
   '/g/$gymName/events/': typeof GGymNameEventsIndexRoute
@@ -94,18 +112,22 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/dev'
     | '/events'
     | '/g/$gymName'
     | '/$'
+    | '/dev/components'
     | '/g/$gymName/'
     | '/g/$gymName/events/$eventId'
-    | '/g/$gymName/events'
+    | '/g/$gymName/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/dev'
     | '/events'
     | '/$'
+    | '/dev/components'
     | '/g/$gymName'
     | '/g/$gymName/events/$eventId'
     | '/g/$gymName/events'
@@ -113,9 +135,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/dev'
     | '/events'
     | '/g/$gymName'
     | '/(notFound)/$'
+    | '/dev/components'
     | '/g/$gymName/'
     | '/g/$gymName/events/$eventId'
     | '/g/$gymName/events/'
@@ -124,6 +148,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  DevRoute: typeof DevRouteWithChildren
   EventsRoute: typeof EventsRoute
   GGymNameLayoutRoute: typeof GGymNameLayoutRouteWithChildren
   notFoundSplatRoute: typeof notFoundSplatRoute
@@ -136,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev': {
+      id: '/dev'
+      path: '/dev'
+      fullPath: '/dev'
+      preLoaderRoute: typeof DevRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -151,6 +183,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dev/components': {
+      id: '/dev/components'
+      path: '/components'
+      fullPath: '/dev/components'
+      preLoaderRoute: typeof DevComponentsRouteImport
+      parentRoute: typeof DevRoute
     }
     '/(notFound)/$': {
       id: '/(notFound)/$'
@@ -176,7 +215,7 @@ declare module '@tanstack/react-router' {
     '/g/$gymName/events/': {
       id: '/g/$gymName/events/'
       path: '/events'
-      fullPath: '/g/$gymName/events'
+      fullPath: '/g/$gymName/events/'
       preLoaderRoute: typeof GGymNameEventsIndexRouteImport
       parentRoute: typeof GGymNameLayoutRoute
     }
@@ -189,6 +228,16 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface DevRouteChildren {
+  DevComponentsRoute: typeof DevComponentsRoute
+}
+
+const DevRouteChildren: DevRouteChildren = {
+  DevComponentsRoute: DevComponentsRoute,
+}
+
+const DevRouteWithChildren = DevRoute._addFileChildren(DevRouteChildren)
 
 interface GGymNameLayoutRouteChildren {
   GGymNameIndexRoute: typeof GGymNameIndexRoute
@@ -209,6 +258,7 @@ const GGymNameLayoutRouteWithChildren = GGymNameLayoutRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  DevRoute: DevRouteWithChildren,
   EventsRoute: EventsRoute,
   GGymNameLayoutRoute: GGymNameLayoutRouteWithChildren,
   notFoundSplatRoute: notFoundSplatRoute,
